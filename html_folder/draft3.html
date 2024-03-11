@@ -1,0 +1,115 @@
+<style>
+    .photo {
+        display: flex;
+        align-items: center;
+    }
+
+    .upload-section {
+        width: 30%;
+        text-align: center;
+    }
+
+    #preview-section {
+        width: 70%;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-content: flex-start;
+    }
+
+    #preview-section img {
+        max-width: 100%;
+        max-height: 100%;
+        margin-bottom: 10px;
+    }
+</style>
+
+<section class="photo">
+    <div class="upload-section">
+        <label for="photo" class="camera-label">
+            <i class="fa-solid fa-camera" style="font-size: 50px; color: var(--FCOLOR)"></i>
+        </label>
+        <input type="file" name="photo" id="photo" accept="image/*" capture="camera" style="display: none;" required multiple>
+
+        <label for="gallery" id="gall">
+            Choose from gallery
+        </label>
+        <input type="file" id="gallery" style="display: none;" required multiple>
+    </div>
+
+    <div id="preview-section">
+        <!-- Image previews will be displayed here -->
+    </div>
+</section>
+
+<script>
+    document.getElementById('photo').addEventListener('change', handleFileSelect);
+    document.getElementById('gallery').addEventListener('change', handleFileSelect);
+
+    const maxImages = 5;
+    let uploadedImages = 0;
+
+    function handleFileSelect(event) {
+        const fileInput = event.target;
+        const previewSection = document.getElementById('preview-section');
+
+        while (previewSection.firstChild) {
+            previewSection.removeChild(previewSection.firstChild);
+        }
+
+        const files = fileInput.files;
+
+        if (files) {
+            for (let i = 0; i < files.length && uploadedImages < maxImages; i++) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    previewSection.appendChild(img);
+                };
+
+                reader.readAsDataURL(files[i]);
+                uploadedImages++;
+            }
+        }
+        
+        // Reset the file input to clear previously selected files
+        fileInput.value = '';
+    }
+</script>
+
+
+document.getElementById('photo').addEventListener('change', handleFileSelect);
+document.getElementById('gallery').addEventListener('change', handleFileSelect);
+
+const maxImages = 5;
+
+function handleFileSelect(event) {
+    const fileInput = event.target;
+    const previewSection = document.getElementById('preview-section');
+
+    while (previewSection.firstChild) {
+        previewSection.removeChild(previewSection.firstChild);
+    }
+
+    const files = fileInput.files;
+
+    if (files) {
+        for (let i = 0; i < files.length && i < maxImages; i++) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                previewSection.appendChild(img);
+            };
+
+            reader.readAsDataURL(files[i]);
+        }
+    }
+    
+    // Reset the file input to clear previously selected files
+    fileInput.value = '';
+}
